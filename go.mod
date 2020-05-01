@@ -1,4 +1,4 @@
-module template
+module {{ .buildpack }}
 
 go 1.14
 

@@ -1,4 +1,4 @@
-package template
+package {{ .buildpack }}
 
 import (
 	"github.com/cloudfoundry/packit"
