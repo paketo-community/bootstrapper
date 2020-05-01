@@ -1,6 +1,10 @@
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
-# github.com/cloudfoundry/packit v0.0.2
+# github.com/MasterMinds/semver v1.5.0
+## explicit
+# github.com/blang/semver v3.5.1+incompatible
+## explicit
+# github.com/cloudfoundry/packit v0.0.5
 ## explicit
 github.com/cloudfoundry/packit
 github.com/cloudfoundry/packit/internal

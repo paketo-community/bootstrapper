@@ -22,6 +22,11 @@ type DetectContext struct {
 	// the lifecycle.
 	WorkingDir string
 
+	// CNBPath is the absolute path location of the buildpack contents.
+	// This path is useful for finding the buildpack.toml or any other
+	// files included in the buildpack.
+	CNBPath string
+
 	// BuildpackInfo includes the details of the buildpack parsed from the
 	// buildpack.toml included in the buildpack contents.
 	BuildpackInfo BuildpackInfo
@@ -55,6 +60,10 @@ type BuildPlan struct {
 	// Requires is a list of BuildPlanRequirements that are required by this
 	// buildpack.
 	Requires []BuildPlanRequirement `toml:"requires"`
+
+	// Or is a list of additional BuildPlans that may be selected by the
+	// lifecycle
+	Or []BuildPlan `toml:"or,omitempty"`
 }
 
 // BuildPlanProvision is a representation of a dependency that can be provided
@@ -113,6 +122,7 @@ func Detect(f DetectFunc, options ...Option) {
 
 	result, err := f(DetectContext{
 		WorkingDir:    dir,
+		CNBPath:       cnbPath,
 		BuildpackInfo: buildpackInfo.Buildpack,
 	})
 	if err != nil {
