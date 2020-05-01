@@ -1,7 +1,7 @@
 api = "0.2"
 
 [buildpack]
-  id = "com.example.node-engine"
+  id = "com.example.{{ .buildpack }}"
   name = "Node Engine Buildpack"
   version = "0.0.2"
 
