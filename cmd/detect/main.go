@@ -1,11 +1,11 @@
 package main
 
 import (
-	"template/template"
+	"{{ .buildpack }}/{{ .buildpack }}"
 
 	"github.com/cloudfoundry/packit"
 )
 
 func main() {
-	packit.Detect(template.Detect())
+	packit.Detect({{ .buildpack }}.Detect())
 }
