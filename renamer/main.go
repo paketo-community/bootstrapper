@@ -20,7 +20,7 @@ func main() {
 		}
 
 		dict := map[string]string{
-			"buildpack": "my-buildpack",
+			"buildpack": "template",
 		}
 
 		buildpackTOML, err := ioutil.ReadFile(path)
