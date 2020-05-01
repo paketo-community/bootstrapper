@@ -1,0 +1,9 @@
+api = "0.2"
+
+[buildpack]
+  id = "com.example.node-engine"
+  name = "Node Engine Buildpack"
+  version = "0.0.2"
+
+[[stacks]]
+  id = "org.cloudfoundry.stacks.cflinuxfs3"
