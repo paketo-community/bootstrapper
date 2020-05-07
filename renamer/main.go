@@ -10,12 +10,12 @@ import (
 )
 
 func main() {
-	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk("template-cnb", func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
 
-		if strings.HasPrefix(path, ".") || strings.HasPrefix(path, "bin") || strings.HasPrefix(path, "vendor") {
+		if strings.HasPrefix(path, "template-cnb/.") || strings.HasPrefix(path, "template-cnb/bin") || strings.HasPrefix(path, "template-cnb/vendor") {
 			return nil
 		}
 
