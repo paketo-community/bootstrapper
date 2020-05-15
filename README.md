@@ -7,6 +7,6 @@ A tool to bootstrap [packit](https://github.com/paketo-buildpacks/packit) compli
 ```bash
 $ export BUILDPACK_NAME=myCNB
 $ echo "buildpack: ${BUILDPACK_NAME}" > config.yml
-$ go run bootstrapper/main.go
+$ go run executer/main.go
 $ ls -la /tmp/myCNB 
 ```

@@ -1,4 +1,4 @@
-package main
+package bootstrapper
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func bootstrap() error {
+func Bootstrap() error {
 	var config map[string]string
 	configFile, err := ioutil.ReadFile("config.yml")
 	if err != nil {
@@ -25,6 +25,7 @@ func bootstrap() error {
 
 	name := config["buildpack"]
 	templatedPath := filepath.Join("/tmp", name)
+
 	err = copyTemplateToTempDir(templatedPath)
 
 	if err != nil {
@@ -66,8 +67,7 @@ func bootstrap() error {
 		return nil
 
 	})
-	return nil
-
+	return err
 }
 
 func copyTemplateToTempDir(path string) error {
