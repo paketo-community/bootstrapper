@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"gopkg.in/yaml.v2"
 )
 
 func main() {
@@ -19,8 +21,15 @@ func main() {
 			return nil
 		}
 
-		dict := map[string]string{
-			"buildpack": "template",
+		var config map[string]string
+		configFile, err := ioutil.ReadFile("config.yml")
+		if err != nil {
+			panic(err)
+		}
+
+		err = yaml.Unmarshal(configFile, &config)
+		if err != nil {
+			panic(err)
 		}
 
 		buildpackTOML, err := ioutil.ReadFile(path)
@@ -37,7 +46,7 @@ func main() {
 
 		t := template.Must(template.New("t1").Parse(string(buildpackTOML)))
 
-		err = t.Execute(file, dict)
+		err = t.Execute(file, config)
 		if err != nil {
 			panic(err)
 		}
