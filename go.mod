@@ -1,4 +1,4 @@
-module github.com/joshzarrabi/template-cnb
+module github.com/joshzarrabi/cnb-bootstrapper
 
 go 1.14
 

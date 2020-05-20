@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/joshzarrabi/template-cnb/bootstrapper"
+	"github.com/joshzarrabi/cnb-bootstrapper/bootstrapper"
 )
 
 func main() {

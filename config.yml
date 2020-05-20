@@ -1,2 +1,2 @@
 ---
-buildpack: jsoh
+buildpack: my-buildpack
