@@ -54,9 +54,10 @@ func Bootstrap() error {
 			panic(err)
 		}
 
-		fmt.Println(path)
-
-		t := template.Must(template.New("t1").Parse(string(buildpackTOML)))
+		funcMap := template.FuncMap{
+			"Title": strings.Title,
+		}
+		t := template.Must(template.New("t1").Funcs(funcMap).Parse(string(buildpackTOML)))
 
 		err = t.Execute(file, config)
 		if err != nil {

@@ -1,2 +1,3 @@
 ---
+organization: my-org
 buildpack: my-buildpack

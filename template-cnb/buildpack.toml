@@ -1,8 +1,8 @@
 api = "0.2"
 
 [buildpack]
-  id = "com.example.{{ .buildpack }}"
-  name = "{{ .buildpack }} Buildpack"
+  id = "{{ .organization }}/{{ .buildpack }}"
+  name = "{{ .buildpack | Title }} Buildpack"
   version = "0.0.2"
 
 [[stacks]]
