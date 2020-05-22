@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/cloudfoundry/packit"
+	"github.com/paketo-buildpacks/packit"
 	main "github.com/{{ .organization }}/{{ .buildpack }}"
 	"github.com/sclevine/spec"
 
