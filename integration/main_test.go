@@ -80,7 +80,7 @@ buildpack: someBuildpack
 				packageSession, err := gexec.Start(packageCmd, packageBuffer, packageBuffer)
 				Expect(err).NotTo(HaveOccurred())
 
-				Eventually(packageSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", buffer.Contents()) })
+				Eventually(packageSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", packageBuffer.Contents()) })
 			})
 		})
 	}, spec.Report(report.Terminal{}), spec.Parallel())
