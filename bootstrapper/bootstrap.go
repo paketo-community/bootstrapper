@@ -1,7 +1,7 @@
 package bootstrapper
 
 import (
-	"fmt"
+	"flag"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -12,8 +12,19 @@ import (
 )
 
 func Bootstrap() error {
-	var config map[string]string
-	configFile, err := ioutil.ReadFile("config.yml")
+	var (
+		config       map[string]string
+		configPath   string
+		templatePath string
+		outputPath   string
+	)
+
+	flag.StringVar(&configPath, "config-path", "config.yml", "path to the config file")
+	flag.StringVar(&templatePath, "template-path", "template-cnb", "path to the template")
+	flag.StringVar(&outputPath, "output-path", "", "path to the new cnb")
+	flag.Parse()
+
+	configFile, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		panic(err)
 	}
@@ -24,23 +35,26 @@ func Bootstrap() error {
 	}
 
 	name := config["buildpack"]
-	templatedPath := filepath.Join("/tmp", name)
 
-	err = copyTemplateToTempDir(templatedPath)
-
-	if err != nil {
-		return err
+	if outputPath == "" {
+		outputPath = filepath.Join("/tmp", name)
 	}
 
-	err = filepath.Walk(templatedPath, func(path string, info os.FileInfo, err error) error {
+	err = copyTemplateToTempDir(outputPath, templatePath)
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = filepath.Walk(outputPath, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
 
-		if strings.HasPrefix(path, filepath.Join(templatedPath, "bin")) ||
-			strings.HasPrefix(path, filepath.Join(templatedPath, "vendor")) ||
-			strings.HasPrefix(path, filepath.Join(templatedPath, ".github")) ||
-			strings.HasPrefix(path, filepath.Join(templatedPath, ".bin")) {
+		if strings.HasPrefix(path, filepath.Join(outputPath, "bin")) ||
+			strings.HasPrefix(path, filepath.Join(outputPath, "vendor")) ||
+			strings.HasPrefix(path, filepath.Join(outputPath, ".github")) ||
+			strings.HasPrefix(path, filepath.Join(outputPath, ".bin")) {
 			return nil
 		}
 
@@ -71,14 +85,13 @@ func Bootstrap() error {
 	return err
 }
 
-func copyTemplateToTempDir(path string) error {
-	fmt.Println(path)
-	err := os.Mkdir(path, os.ModePerm)
+func copyTemplateToTempDir(path, templatePath string) error {
+	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {
 		return err
 	}
 
-	err = CopyDirectory("template-cnb", path)
+	err = CopyDirectory(templatePath, path)
 	if err != nil {
 		return err
 	}

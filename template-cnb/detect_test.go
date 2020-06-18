@@ -1,4 +1,4 @@
-package main_test
+package {{ .buildpack }}_test
 
 import (
 	"io/ioutil"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/paketo-buildpacks/packit"
-	main "github.com/{{ .organization }}/{{ .buildpack }}"
+	"github.com/{{ .organization }}/{{ .buildpack }}"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"
@@ -25,7 +25,7 @@ func testDetect(t *testing.T, context spec.G, it spec.S) {
 		workingDir, err = ioutil.TempDir("", "working-dir")
 		Expect(err).NotTo(HaveOccurred())
 
-		detect = main.Detect()
+		detect = {{ .buildpack }}.Detect()
 	})
 
 	it.After(func() {

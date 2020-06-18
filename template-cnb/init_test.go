@@ -1,4 +1,4 @@
-package main_test
+package {{ .buildpack }}_test
 
 import (
 	"testing"
