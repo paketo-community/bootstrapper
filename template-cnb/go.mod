@@ -1,4 +1,4 @@
-module github.com/{{ .organization }}/{{ .buildpack }}
+module github.com/{{ .Organization }}/{{ .Buildpack }}
 
 go 1.14
 
