@@ -22,7 +22,7 @@ var bootstrapper string
 func TestBootstrapper(t *testing.T) {
 	var Expect = NewWithT(t).Expect
 	var err error
-	bootstrapper, err = gexec.Build("github.com/joshzarrabi/cnb-bootstrapper/executer")
+	bootstrapper, err = gexec.Build("github.com/paketo-community/bootstrapper/executer")
 	Expect(err).NotTo(HaveOccurred())
 	SetDefaultEventuallyTimeout(10 * time.Second)
 

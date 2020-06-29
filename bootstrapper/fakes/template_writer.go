@@ -3,7 +3,7 @@ package fakes
 import (
 	"sync"
 
-	"github.com/joshzarrabi/cnb-bootstrapper/bootstrapper"
+	"github.com/paketo-community/bootstrapper/bootstrapper"
 )
 
 type TemplateWriter struct {
