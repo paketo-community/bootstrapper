@@ -1,6 +1,7 @@
 package bootstrapper
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -25,12 +26,12 @@ func Bootstrap(templateWriter TemplateWriter, configPath, templatePath, outputPa
 
 	configFile, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to read config file: %q", err)
 	}
 
 	err = yaml.Unmarshal(configFile, &config)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to parse config file: %q", err)
 	}
 
 	if outputPath == "" {
@@ -39,7 +40,7 @@ func Bootstrap(templateWriter TemplateWriter, configPath, templatePath, outputPa
 
 	err = fs.Copy(templatePath, outputPath)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to copy template to the output path: %q", err)
 	}
 
 	err = filepath.Walk(outputPath, func(path string, info os.FileInfo, err error) error {
@@ -55,8 +56,7 @@ func Bootstrap(templateWriter TemplateWriter, configPath, templatePath, outputPa
 
 		err = templateWriter.FillOutTemplate(path, config)
 		if err != nil {
-			panic(err)
-			return err
+			return fmt.Errorf("failed to fill out template: %q", err)
 		}
 
 		return nil

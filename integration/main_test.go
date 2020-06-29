@@ -24,7 +24,7 @@ func TestBootstrapper(t *testing.T) {
 	var err error
 	bootstrapper, err = gexec.Build("github.com/joshzarrabi/cnb-bootstrapper/executer")
 	Expect(err).NotTo(HaveOccurred())
-	SetDefaultEventuallyTimeout(5 * time.Second)
+	SetDefaultEventuallyTimeout(10 * time.Second)
 
 	spec.Run(t, "dispatch", func(t *testing.T, context spec.G, it spec.S) {
 		var (
@@ -63,7 +63,7 @@ buildpack: someBuildpack
 				command := exec.Command(
 					bootstrapper,
 					"--config-path", configPath,
-					"--template-path", "/home/arjun/workspace/cnb-bootstrapper/template-cnb",
+					"--template-path", "../template-cnb",
 					"--output-path", outputPath,
 				)
 				buffer := gbytes.NewBuffer()

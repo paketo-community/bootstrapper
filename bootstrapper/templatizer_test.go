@@ -41,7 +41,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 			Expect(os.RemoveAll(templatePath)).To(Succeed())
 		})
 
-		it.Focus("fills out the template based on the config", func() {
+		it("fills out the template based on the config", func() {
 			err := templatizer.FillOutTemplate(templatePath, config)
 			Expect(err).NotTo(HaveOccurred())
 
