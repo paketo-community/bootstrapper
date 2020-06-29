@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/joshzarrabi/cnb-bootstrapper/bootstrapper"
 	. "github.com/onsi/gomega"
+	"github.com/paketo-community/bootstrapper/bootstrapper"
 	"github.com/sclevine/spec"
 )
 

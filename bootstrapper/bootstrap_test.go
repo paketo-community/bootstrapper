@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/joshzarrabi/cnb-bootstrapper/bootstrapper"
-	"github.com/joshzarrabi/cnb-bootstrapper/bootstrapper/fakes"
+	"github.com/paketo-community/bootstrapper/bootstrapper"
+	"github.com/paketo-community/bootstrapper/bootstrapper/fakes"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"

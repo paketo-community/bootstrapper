@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/joshzarrabi/cnb-bootstrapper/bootstrapper"
+	"github.com/paketo-community/bootstrapper/bootstrapper"
 )
 
 func main() {
