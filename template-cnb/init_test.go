@@ -1,4 +1,4 @@
-package {{ .buildpack }}_test
+package {{ .Buildpack }}_test
 
 import (
 	"testing"
@@ -7,8 +7,8 @@ import (
 	"github.com/sclevine/spec/report"
 )
 
-func TestUnit{{ .buildpack | Title }}(t *testing.T) {
-	suite := spec.New("{{ .buildpack }}", spec.Report(report.Terminal{}), spec.Parallel())
+func TestUnit{{ .Buildpack | Title }}(t *testing.T) {
+	suite := spec.New("{{ .Buildpack }}", spec.Report(report.Terminal{}), spec.Parallel())
 	suite("Build", testBuild)
 	suite("Detect", testDetect)
 	suite.Run(t)

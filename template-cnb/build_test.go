@@ -1,4 +1,4 @@
-package {{ .buildpack }}_test
+package {{ .Buildpack }}_test
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/paketo-buildpacks/packit"
-	"github.com/{{ .organization }}/{{ .buildpack }}"
+	"github.com/{{ .Organization }}/{{ .Buildpack }}"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"
@@ -34,7 +34,7 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		workingDir, err = ioutil.TempDir("", "working-dir")
 		Expect(err).NotTo(HaveOccurred())
 
-		build = {{ .buildpack }}.Build()
+		build = {{ .Buildpack }}.Build()
 	})
 
 	it.After(func() {

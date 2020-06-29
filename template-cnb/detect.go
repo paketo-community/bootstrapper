@@ -1,4 +1,4 @@
-package {{ .buildpack }}
+package {{ .Buildpack }}
 
 import "github.com/paketo-buildpacks/packit"
 

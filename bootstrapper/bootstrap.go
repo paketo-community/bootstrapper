@@ -1,49 +1,46 @@
 package bootstrapper
 
 import (
-	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
 
+	"github.com/paketo-buildpacks/packit/fs"
 	"gopkg.in/yaml.v2"
 )
 
-func Bootstrap() error {
-	var (
-		config       map[string]string
-		configPath   string
-		templatePath string
-		outputPath   string
-	)
+//go:generate faux --interface TemplateWriter --output fakes/template_writer.go
+type TemplateWriter interface {
+	FillOutTemplate(path string, config Config) error
+}
 
-	flag.StringVar(&configPath, "config-path", "config.yml", "path to the config file")
-	flag.StringVar(&templatePath, "template-path", "template-cnb", "path to the template")
-	flag.StringVar(&outputPath, "output-path", "", "path to the new cnb")
-	flag.Parse()
+type Config struct {
+	Buildpack    string `yaml:"buildpack"`
+	Organization string `yaml:"organization"`
+}
+
+func Bootstrap(templateWriter TemplateWriter, configPath, templatePath, outputPath string) error {
+	var config Config
 
 	configFile, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to read config file: %q", err)
 	}
 
 	err = yaml.Unmarshal(configFile, &config)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to parse config file: %q", err)
 	}
-
-	name := config["buildpack"]
 
 	if outputPath == "" {
-		outputPath = filepath.Join("/tmp", name)
+		outputPath = filepath.Join("/tmp", config.Buildpack)
 	}
 
-	err = copyTemplateToTempDir(outputPath, templatePath)
-
+	err = fs.Copy(templatePath, outputPath)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to copy template to the output path: %q", err)
 	}
 
 	err = filepath.Walk(outputPath, func(path string, info os.FileInfo, err error) error {
@@ -52,49 +49,18 @@ func Bootstrap() error {
 		}
 
 		if strings.HasPrefix(path, filepath.Join(outputPath, "bin")) ||
-			strings.HasPrefix(path, filepath.Join(outputPath, "vendor")) ||
 			strings.HasPrefix(path, filepath.Join(outputPath, ".github")) ||
 			strings.HasPrefix(path, filepath.Join(outputPath, ".bin")) {
 			return nil
 		}
 
-		buildpackTOML, err := ioutil.ReadFile(path)
+		err = templateWriter.FillOutTemplate(path, config)
 		if err != nil {
-			panic(err)
+			return fmt.Errorf("failed to fill out template: %q", err)
 		}
 
-		file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
-		if err != nil {
-			panic(err)
-		}
-
-		funcMap := template.FuncMap{
-			"Title": strings.Title,
-		}
-		t := template.Must(template.New("t1").Funcs(funcMap).Parse(string(buildpackTOML)))
-
-		err = t.Execute(file, config)
-		if err != nil {
-			panic(err)
-		}
-
-		file.Close()
 		return nil
-
 	})
+
 	return err
-}
-
-func copyTemplateToTempDir(path, templatePath string) error {
-	err := os.MkdirAll(path, os.ModePerm)
-	if err != nil {
-		return err
-	}
-
-	err = CopyDirectory(templatePath, path)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

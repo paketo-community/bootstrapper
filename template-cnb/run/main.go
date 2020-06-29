@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/paketo-buildpacks/packit"
-	"github.com/{{ .organization }}/{{ .buildpack }}"
+	"github.com/{{ .Organization }}/{{ .Buildpack }}"
 )
 
 func main() {
-	packit.Run({{ .buildpack }}.Detect(), {{ .buildpack }}.Build())
+	packit.Run({{ .Buildpack }}.Detect(), {{ .Buildpack }}.Build())
 }
