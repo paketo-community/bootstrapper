@@ -4,9 +4,15 @@ A tool to bootstrap [packit](https://github.com/paketo-buildpacks/packit) compli
 
 ## Usage
 
+- Edit the `config.yml` file included in this directory where `organization` is the name of your github org,
+and `buildpack` is the name of the buildpack.
+
+Your github repo will be: `github.com/<organization>/<buildpack>`
+
+- Run the following command:
+
 ```bash
-$ export BUILDPACK_NAME=myCNB
-$ echo "buildpack: ${BUILDPACK_NAME}" > config.yml
 $ go run executer/main.go
-$ ls -la /tmp/myCNB 
 ```
+
+- You will find your packit compliant buildpack template in `/tmp/<buildpack>`
