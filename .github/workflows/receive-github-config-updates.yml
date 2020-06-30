@@ -24,7 +24,7 @@ jobs:
         path: current-repo
 
     - name: Run the sync action
-      uses: joshzarrabi/github-config/actions/sync@master
+      uses: paketo-buildpacks/github-config/actions/sync@master
       env:
         GITHUB_TOKEN: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
       with:
