@@ -11,6 +11,7 @@ function main() {
             printf "** GO Test Succeeded **"
         else
             printf "** GO Test Failed **"
+            exit 1
         fi
     popd > /dev/null
 }
