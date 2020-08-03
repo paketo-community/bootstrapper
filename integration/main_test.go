@@ -73,7 +73,7 @@ buildpack: someBuildpack
 
 				Eventually(session).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", buffer.Contents()) })
 
-				packageCmd := exec.Command(filepath.Join("scripts", "package.sh"))
+				packageCmd := exec.Command(filepath.Join("scripts", "package.sh"), "--version", "1.2.3")
 				packageCmd.Dir = outputPath
 				packageBuffer := gbytes.NewBuffer()
 
