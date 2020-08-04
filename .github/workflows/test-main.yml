@@ -1,0 +1,34 @@
+name: Test Pull Request
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.14
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run Unit Tests
+      run: ./scripts/unit.sh
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit
+    steps:
+    - name: Setup Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.14
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run Integration Tests
+      run: ./scripts/integration.sh
