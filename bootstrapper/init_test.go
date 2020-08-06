@@ -10,5 +10,6 @@ import (
 func TestBootstrapper(t *testing.T) {
 	suite := spec.New("bootstrapper", spec.Report(report.Terminal{}))
 	suite("bootstrap", testBootstrap)
+	suite("templatizer", testTemplatizer)
 	suite.Run(t)
 }
