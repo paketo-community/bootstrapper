@@ -61,7 +61,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 					err := templatizer.FillOutTemplate(templatePath, config)
 					Expect(err).To(HaveOccurred())
 
-					Expect(err).To(ContainSubstring("failed to read template file"))
+					Expect(err.Error()).To(ContainSubstring("failed to read template file"))
 				})
 			})
 
@@ -70,7 +70,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 					Expect(os.Chmod(templatePath, 0444)).To(Succeed())
 				})
 
-				it.Focus("errors", func() {
+				it("errors", func() {
 					err := templatizer.FillOutTemplate(templatePath, config)
 					Expect(err).To(HaveOccurred())
 
@@ -89,7 +89,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 					templatePath = template.Name()
 				})
 
-				it.Focus("errors", func() {
+				it("errors", func() {
 					err := templatizer.FillOutTemplate(templatePath, config)
 					Expect(err).To(HaveOccurred())
 
