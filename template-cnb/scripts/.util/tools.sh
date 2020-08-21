@@ -101,10 +101,10 @@ function util::tools::pack::install() {
     curl "https://github.com/buildpacks/pack/releases/download/${version}/pack-${version}-${os}.tgz" \
       --silent \
       --location \
-      --output /tmp/pack.tgz
-    tar xzf /tmp/pack.tgz -C "${dir}"
+      --output "${dir}/pack.tgz"
+    tar xzf "${dir}/pack.tgz" -C "${dir}"
     chmod +x "${dir}/pack"
-    rm /tmp/pack.tgz
+    rm "${dir}/pack.tgz"
   fi
 }
 

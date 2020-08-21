@@ -1,4 +1,4 @@
-package {{ .Buildpack }}_test
+package {{ .Buildpack | RemoveHyphens }}_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	"github.com/sclevine/spec/report"
 )
 
-func TestUnit{{ .Buildpack | Title }}(t *testing.T) {
+func TestUnit{{ .Buildpack | Title | RemoveHyphens}}(t *testing.T) {
 	suite := spec.New("{{ .Buildpack }}", spec.Report(report.Terminal{}), spec.Parallel())
 	suite("Build", testBuild)
 	suite("Detect", testDetect)

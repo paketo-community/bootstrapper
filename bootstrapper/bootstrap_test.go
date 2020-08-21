@@ -89,6 +89,24 @@ buildpack: someBuildpack
 		}))
 	})
 
+	context("buildpack name contains a hyphen", func() {
+		it.Before(func() {
+			Expect(os.RemoveAll(configPath)).To(Succeed())
+
+			configFile, err := ioutil.TempFile("", "config.yml")
+			Expect(err).NotTo(HaveOccurred())
+
+			_, err = configFile.WriteString(`---
+organization: some-org
+buildpack: hyphenated-buildpack
+`)
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		it("removes hyphens from the bootstrapped package name", func() {
+
+		})
+	})
 	context("error cases", func() {
 		context("when the config file can not be read", func() {
 			it.Before(func() {
