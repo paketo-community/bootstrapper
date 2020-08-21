@@ -22,7 +22,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 	context("FillOutTemplate", func() {
 		it.Before(func() {
 			config = bootstrapper.Config{
-				Buildpack:    "mybp",
+				Buildpack:    "my-bp-name",
 				Organization: "myorg",
 			}
 
@@ -48,7 +48,31 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 			contents, err := ioutil.ReadFile(templatePath)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(string(contents)).To(Equal("mybp myorg"))
+			Expect(string(contents)).To(Equal("my-bp-name myorg"))
+		})
+
+		context("when the template file uses the RemoveHyphens function", func() {
+			it.Before(func() {
+				Expect(os.RemoveAll(templatePath)).To(Succeed())
+
+				template, err := ioutil.TempFile("", "template")
+				Expect(err).NotTo(HaveOccurred())
+
+				_, err = template.WriteString("{{ .Buildpack | RemoveHyphens }}")
+				Expect(err).NotTo(HaveOccurred())
+
+				templatePath = template.Name()
+			})
+
+			it("removes hyphens from the templated value", func() {
+				err := templatizer.FillOutTemplate(templatePath, config)
+				Expect(err).NotTo(HaveOccurred())
+
+				contents, err := ioutil.ReadFile(templatePath)
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(string(contents)).To(Equal("mybpname"))
+			})
 		})
 
 		context("error cases", func() {

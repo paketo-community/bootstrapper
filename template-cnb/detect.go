@@ -1,4 +1,4 @@
-package {{ .Buildpack }}
+package {{ .Buildpack | RemoveHyphens}}
 
 import "github.com/paketo-buildpacks/packit"
 

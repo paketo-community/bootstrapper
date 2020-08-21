@@ -1,4 +1,4 @@
-package {{ .Buildpack }}_test
+package {{ .Buildpack | RemoveHyphens}}_test
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/paketo-buildpacks/packit"
-	"github.com/{{ .Organization }}/{{ .Buildpack }}"
+	{{ .Buildpack | RemoveHyphens }} "github.com/{{ .Organization }}/{{ .Buildpack }}"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"
@@ -34,7 +34,7 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		workingDir, err = ioutil.TempDir("", "working-dir")
 		Expect(err).NotTo(HaveOccurred())
 
-		build = {{ .Buildpack }}.Build()
+		build = {{ .Buildpack | RemoveHyphens }}.Build()
 	})
 
 	it.After(func() {
