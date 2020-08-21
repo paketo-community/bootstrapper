@@ -1,0 +1,3 @@
+{
+  "some-buildpack": "github.com/some-org/some-buildpack"
+}
