@@ -14,6 +14,10 @@ func NewTemplatizer() Templatizer {
 	return Templatizer{}
 }
 
+func RemoveHyphens(s string) string {
+	return strings.ReplaceAll(s, "-", "")
+}
+
 func (tz Templatizer) FillOutTemplate(path string, config Config) error {
 	templ, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -26,7 +30,8 @@ func (tz Templatizer) FillOutTemplate(path string, config Config) error {
 	}
 
 	funcMap := template.FuncMap{
-		"Title": strings.Title,
+		"Title":         strings.Title,
+		"RemoveHyphens": RemoveHyphens,
 	}
 	t := template.Must(template.New("t1").Funcs(funcMap).Parse(string(templ)))
 

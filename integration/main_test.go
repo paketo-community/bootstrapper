@@ -83,5 +83,57 @@ buildpack: someBuildpack
 				Eventually(packageSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", packageBuffer.Contents()) })
 			})
 		})
+
+		context("when buildpack name contains a hyphen", func() {
+			var (
+				configPath string
+				outputPath string
+			)
+
+			it.Before(func() {
+				outputPath, err = ioutil.TempDir("", "")
+				Expect(err).NotTo(HaveOccurred())
+
+				configFile, err := ioutil.TempFile("", "config.yml")
+				Expect(err).NotTo(HaveOccurred())
+
+				_, err = configFile.WriteString(`---
+organization: some-org
+buildpack: some-hyphenated-buildpack
+`)
+				Expect(err).NotTo(HaveOccurred())
+
+				configPath = configFile.Name()
+			})
+
+			it.After(func() {
+				Expect(os.RemoveAll(outputPath)).To(Succeed())
+				Expect(os.RemoveAll(configPath)).To(Succeed())
+			})
+
+			it("creates a buildpack that can run `./scripts/package`", func() {
+				command := exec.Command(
+					bootstrapper,
+					"--config-path", configPath,
+					"--template-path", "../template-cnb",
+					"--output-path", outputPath,
+				)
+				buffer := gbytes.NewBuffer()
+
+				session, err := gexec.Start(command, buffer, buffer)
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(session).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", buffer.Contents()) })
+
+				packageCmd := exec.Command(filepath.Join("scripts", "package.sh"), "--version", "1.2.3")
+				packageCmd.Dir = outputPath
+				packageBuffer := gbytes.NewBuffer()
+
+				packageSession, err := gexec.Start(packageCmd, packageBuffer, packageBuffer)
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(packageSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", packageBuffer.Contents()) })
+			})
+		})
 	}, spec.Report(report.Terminal{}), spec.Parallel())
 }
