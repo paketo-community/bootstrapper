@@ -24,7 +24,7 @@ func TestBootstrapper(t *testing.T) {
 	var err error
 	bootstrapper, err = gexec.Build("github.com/paketo-community/bootstrapper/executer")
 	Expect(err).NotTo(HaveOccurred())
-	SetDefaultEventuallyTimeout(10 * time.Second)
+	SetDefaultEventuallyTimeout(30 * time.Second)
 
 	spec.Run(t, "dispatch", func(t *testing.T, context spec.G, it spec.S) {
 		var (
@@ -59,7 +59,7 @@ buildpack: someBuildpack
 				Expect(os.RemoveAll(configPath)).To(Succeed())
 			})
 
-			it("creates a buildpack that can run `./scripts/package`", func() {
+			it("creates a buildpack that can run `./scripts/unit.sh` and `./scripts/integration.sh`", func() {
 				command := exec.Command(
 					bootstrapper,
 					"--config-path", configPath,
@@ -73,14 +73,24 @@ buildpack: someBuildpack
 
 				Eventually(session).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", buffer.Contents()) })
 
-				packageCmd := exec.Command(filepath.Join("scripts", "package.sh"), "--version", "1.2.3")
-				packageCmd.Dir = outputPath
-				packageBuffer := gbytes.NewBuffer()
+				unitCmd := exec.Command(filepath.Join("scripts", "unit.sh"))
+				unitCmd.Dir = outputPath
+				unitBuffer := gbytes.NewBuffer()
 
-				packageSession, err := gexec.Start(packageCmd, packageBuffer, packageBuffer)
+				unitSession, err := gexec.Start(unitCmd, unitBuffer, unitBuffer)
 				Expect(err).NotTo(HaveOccurred())
 
-				Eventually(packageSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", packageBuffer.Contents()) })
+				Eventually(unitSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", unitBuffer.Contents()) })
+
+				integrationCmd := exec.Command(filepath.Join("scripts", "integration.sh"))
+				integrationCmd.Dir = outputPath
+				integrationBuffer := gbytes.NewBuffer()
+
+				integrationSession, err := gexec.Start(integrationCmd, integrationBuffer, integrationBuffer)
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(integrationSession).Should(gexec.Exit(1))
+				Expect(integrationBuffer.Contents()).To(ContainSubstring("Not Implemented"))
 			})
 		})
 
@@ -111,7 +121,7 @@ buildpack: some-hyphenated-buildpack
 				Expect(os.RemoveAll(configPath)).To(Succeed())
 			})
 
-			it("creates a buildpack that can run `./scripts/package`", func() {
+			it("creates a buildpack that can run `./scripts/unit.sh` and `./scripts/integration.sh`", func() {
 				command := exec.Command(
 					bootstrapper,
 					"--config-path", configPath,
@@ -125,15 +135,25 @@ buildpack: some-hyphenated-buildpack
 
 				Eventually(session).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", buffer.Contents()) })
 
-				packageCmd := exec.Command(filepath.Join("scripts", "package.sh"), "--version", "1.2.3")
-				packageCmd.Dir = outputPath
-				packageBuffer := gbytes.NewBuffer()
+				unitCmd := exec.Command(filepath.Join("scripts", "unit.sh"))
+				unitCmd.Dir = outputPath
+				unitBuffer := gbytes.NewBuffer()
 
-				packageSession, err := gexec.Start(packageCmd, packageBuffer, packageBuffer)
+				unitSession, err := gexec.Start(unitCmd, unitBuffer, unitBuffer)
 				Expect(err).NotTo(HaveOccurred())
 
-				Eventually(packageSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", packageBuffer.Contents()) })
+				Eventually(unitSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", unitBuffer.Contents()) })
+
+				integrationCmd := exec.Command(filepath.Join("scripts", "integration.sh"))
+				integrationCmd.Dir = outputPath
+				integrationBuffer := gbytes.NewBuffer()
+
+				integrationSession, err := gexec.Start(integrationCmd, integrationBuffer, integrationBuffer)
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(integrationSession).Should(gexec.Exit(1))
+				Expect(integrationBuffer.Contents()).To(ContainSubstring("Not Implemented"))
 			})
 		})
-	}, spec.Report(report.Terminal{}), spec.Parallel())
+	}, spec.Report(report.Terminal{}))
 }
