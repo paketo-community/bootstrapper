@@ -3,6 +3,7 @@ api = "0.2"
 [buildpack]
   id = "{{ .Organization }}/{{ .Buildpack }}"
   name = "{{ .Buildpack | Title }} Buildpack"
+  homepage = "https://github.com/{{ .Organization }}/{{ .Buildpack }}"
 
 [[stacks]]
   id = "io.buildpacks.stacks.bionic"
