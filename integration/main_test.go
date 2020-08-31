@@ -33,36 +33,21 @@ func TestBootstrapper(t *testing.T) {
 		)
 
 		context("when given a valid config", func() {
-			var (
-				configPath string
-				outputPath string
-			)
+			var outputPath string
 
 			it.Before(func() {
 				outputPath, err = ioutil.TempDir("", "")
 				Expect(err).NotTo(HaveOccurred())
-
-				configFile, err := ioutil.TempFile("", "config.yml")
-				Expect(err).NotTo(HaveOccurred())
-
-				_, err = configFile.WriteString(`---
-organization: some-org
-buildpack: someBuildpack
-`)
-				Expect(err).NotTo(HaveOccurred())
-
-				configPath = configFile.Name()
 			})
 
 			it.After(func() {
 				Expect(os.RemoveAll(outputPath)).To(Succeed())
-				Expect(os.RemoveAll(configPath)).To(Succeed())
 			})
 
 			it("creates a buildpack that can run `./scripts/unit.sh` and `./scripts/integration.sh`", func() {
 				command := exec.Command(
 					bootstrapper,
-					"--config-path", configPath,
+					"--buildpack", "some-org/someBuildpack",
 					"--template-path", "../template-cnb",
 					"--output-path", outputPath,
 				)
@@ -95,36 +80,21 @@ buildpack: someBuildpack
 		})
 
 		context("when buildpack name contains a hyphen", func() {
-			var (
-				configPath string
-				outputPath string
-			)
+			var outputPath string
 
 			it.Before(func() {
 				outputPath, err = ioutil.TempDir("", "")
 				Expect(err).NotTo(HaveOccurred())
-
-				configFile, err := ioutil.TempFile("", "config.yml")
-				Expect(err).NotTo(HaveOccurred())
-
-				_, err = configFile.WriteString(`---
-organization: some-org
-buildpack: some-hyphenated-buildpack
-`)
-				Expect(err).NotTo(HaveOccurred())
-
-				configPath = configFile.Name()
 			})
 
 			it.After(func() {
 				Expect(os.RemoveAll(outputPath)).To(Succeed())
-				Expect(os.RemoveAll(configPath)).To(Succeed())
 			})
 
 			it("creates a buildpack that can run `./scripts/unit.sh` and `./scripts/integration.sh`", func() {
 				command := exec.Command(
 					bootstrapper,
-					"--config-path", configPath,
+					"--buildpack", "some-org/some-hyphenated-buildpack",
 					"--template-path", "../template-cnb",
 					"--output-path", outputPath,
 				)
