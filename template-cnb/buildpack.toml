@@ -2,7 +2,7 @@ api = "0.2"
 
 [buildpack]
   id = "{{ .Organization }}/{{ .Buildpack }}"
-  name = "{{ .Buildpack | Title }} Buildpack"
+  name = "Paketo {{ .Buildpack | Title }} Buildpack"
 
 [[stacks]]
   id = "io.buildpacks.stacks.bionic"
