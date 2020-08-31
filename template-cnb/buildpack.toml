@@ -7,9 +7,6 @@ api = "0.2"
 [[stacks]]
   id = "io.buildpacks.stacks.bionic"
 
-[[stacks]]
-  id = "org.cloudfoundry.stacks.cflinuxfs3"
-
 [metadata]
   include_files = ["bin/run","bin/build","bin/detect","buildpack.toml"]
   pre_package = "./scripts/build.sh"
