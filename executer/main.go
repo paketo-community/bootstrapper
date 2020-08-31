@@ -9,18 +9,18 @@ import (
 
 func main() {
 	var (
-		configPath   string
+		buildpack    string
 		templatePath string
 		outputPath   string
 	)
 
-	flag.StringVar(&configPath, "config-path", "config.yml", "path to the config file")
+	flag.StringVar(&buildpack, "buildpack", "", "<org>/<name>")
 	flag.StringVar(&templatePath, "template-path", "template-cnb", "path to the template")
 	flag.StringVar(&outputPath, "output-path", "", "path to the new cnb")
 	flag.Parse()
 
 	templatizer := bootstrapper.NewTemplatizer()
-	err := bootstrapper.Bootstrap(templatizer, configPath, templatePath, outputPath)
+	err := bootstrapper.Bootstrap(templatizer, buildpack, templatePath, outputPath)
 
 	if err != nil {
 		fmt.Println(err)

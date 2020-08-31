@@ -21,7 +21,6 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 		templatizer *fakes.TemplateWriter
 
 		outputPath   string
-		configPath   string
 		templatePath string
 		err          error
 
@@ -35,15 +34,6 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 		outputPath, err = ioutil.TempDir("", "")
 		Expect(err).NotTo(HaveOccurred())
 
-		configFile, err := ioutil.TempFile("", "config.yml")
-		Expect(err).NotTo(HaveOccurred())
-
-		_, err = configFile.WriteString(`---
-organization: some-org
-buildpack: someBuildpack
-`)
-		Expect(err).NotTo(HaveOccurred())
-
 		templatePath, err = ioutil.TempDir("", "")
 		Expect(err).NotTo(HaveOccurred())
 
@@ -52,8 +42,6 @@ buildpack: someBuildpack
 
 		err = ioutil.WriteFile(filepath.Join(templatePath, "templ2"), []byte(""), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
-
-		configPath = configFile.Name()
 
 		templatizer = &fakes.TemplateWriter{}
 		templatizer.FillOutTemplateCall.Stub = func(path string, config bootstrapper.Config) error {
@@ -67,12 +55,11 @@ buildpack: someBuildpack
 
 	it.After(func() {
 		Expect(os.RemoveAll(outputPath)).To(Succeed())
-		Expect(os.RemoveAll(configPath)).To(Succeed())
 		Expect(os.RemoveAll(templatePath)).To(Succeed())
 	})
 
 	it("fills out every template in the correct path", func() {
-		err := bootstrapper.Bootstrap(templatizer, configPath, templatePath, outputPath)
+		err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(templatizer.FillOutTemplateCall.CallCount).To(Equal(2))
@@ -90,45 +77,21 @@ buildpack: someBuildpack
 	})
 
 	context("error cases", func() {
-		context("when the config file can not be read", func() {
-			it.Before(func() {
-				Expect(os.RemoveAll(configPath)).To(Succeed())
-			})
-
-			it("errors", func() {
-				err := bootstrapper.Bootstrap(templatizer, configPath, templatePath, outputPath)
+		context("when the buildpack name is malformed", func() {
+			it("errors with a helpful message", func() {
+				err := bootstrapper.Bootstrap(templatizer, "some-malformed-name", templatePath, outputPath)
 				Expect(err).To(HaveOccurred())
 
-				Expect(err).To(MatchError(ContainSubstring("failed to read config file:")))
+				Expect(err).To(MatchError(ContainSubstring("buildpack name must be in format <organization>/<buildpack-name>")))
 			})
 		})
-
-		context("when the config file can not be parsed", func() {
-			it.Before(func() {
-				configFile, err := ioutil.TempFile("", "config.yml")
-				Expect(err).NotTo(HaveOccurred())
-
-				_, err = configFile.WriteString(`some-bad-yaml`)
-				Expect(err).NotTo(HaveOccurred())
-
-				configPath = configFile.Name()
-			})
-
-			it("errors", func() {
-				err := bootstrapper.Bootstrap(templatizer, configPath, templatePath, outputPath)
-				Expect(err).To(HaveOccurred())
-
-				Expect(err).To(MatchError(ContainSubstring("failed to parse config file:")))
-			})
-		})
-
 		context("when the template can not be copied to the output path", func() {
 			it.Before(func() {
 				templatePath = "does-not-exist"
 			})
 
 			it("errors", func() {
-				err := bootstrapper.Bootstrap(templatizer, configPath, templatePath, outputPath)
+				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
 				Expect(err).To(HaveOccurred())
 
 				Expect(err).To(MatchError(ContainSubstring("failed to copy template to the output path:")))
@@ -142,7 +105,7 @@ buildpack: someBuildpack
 			})
 
 			it("errors", func() {
-				err := bootstrapper.Bootstrap(templatizer, configPath, templatePath, outputPath)
+				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
 				Expect(err).To(HaveOccurred())
 
 				Expect(err).To(MatchError(`failed to fill out template: "some-error"`))

@@ -1,14 +1,13 @@
 package bootstrapper
 
 import (
+	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/paketo-buildpacks/packit/fs"
-	"gopkg.in/yaml.v2"
 )
 
 //go:generate faux --interface TemplateWriter --output fakes/template_writer.go
@@ -17,28 +16,25 @@ type TemplateWriter interface {
 }
 
 type Config struct {
-	Buildpack    string `yaml:"buildpack"`
 	Organization string `yaml:"organization"`
+	Buildpack    string `yaml:"buildpack"`
 }
 
-func Bootstrap(templateWriter TemplateWriter, configPath, templatePath, outputPath string) error {
-	var config Config
-
-	configFile, err := ioutil.ReadFile(configPath)
-	if err != nil {
-		return fmt.Errorf("failed to read config file: %q", err)
+func Bootstrap(templateWriter TemplateWriter, buildpack, templatePath, outputPath string) error {
+	if len(strings.Split(buildpack, "/")) != 2 {
+		return errors.New("buildpack name must be in format <organization>/<buildpack-name>")
 	}
 
-	err = yaml.Unmarshal(configFile, &config)
-	if err != nil {
-		return fmt.Errorf("failed to parse config file: %q", err)
+	config := Config{
+		Organization: strings.Split(buildpack, "/")[0],
+		Buildpack:    strings.Split(buildpack, "/")[1],
 	}
 
 	if outputPath == "" {
 		outputPath = filepath.Join("/tmp", config.Buildpack)
 	}
 
-	err = fs.Copy(templatePath, outputPath)
+	err := fs.Copy(templatePath, outputPath)
 	if err != nil {
 		return fmt.Errorf("failed to copy template to the output path: %q", err)
 	}
