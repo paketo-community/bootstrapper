@@ -2,6 +2,7 @@ api = "0.2"
 
 [buildpack]
   id = "{{ .Organization }}/{{ .Buildpack }}"
+  homepage = "https://github.com/{{ .Organization }}/{{ .Buildpack }}"
   name = "Paketo {{ .Buildpack | Title }} Buildpack"
 
 [[stacks]]
