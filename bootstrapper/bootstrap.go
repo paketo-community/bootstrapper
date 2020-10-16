@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/paketo-buildpacks/packit/fs"
+	"github.com/markbates/pkger"
 )
 
 //go:generate faux --interface TemplateWriter --output fakes/template_writer.go
@@ -20,7 +20,7 @@ type Config struct {
 	Buildpack    string `yaml:"buildpack"`
 }
 
-func Bootstrap(templateWriter TemplateWriter, buildpack, templatePath, outputPath string) error {
+func Bootstrap(templateWriter TemplateWriter, buildpack, outputPath string) error {
 	if len(strings.Split(buildpack, "/")) != 2 {
 		return errors.New("buildpack name must be in format <organization>/<buildpack-name>")
 	}
@@ -34,12 +34,19 @@ func Bootstrap(templateWriter TemplateWriter, buildpack, templatePath, outputPat
 		outputPath = filepath.Join("/tmp", config.Buildpack)
 	}
 
-	err := fs.Copy(templatePath, outputPath)
-	if err != nil {
-		return fmt.Errorf("failed to copy template to the output path: %q", err)
-	}
+	// f, err := pkger.Open("/template-cnb/go.mod.tmpl")
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	err = filepath.Walk(outputPath, func(path string, info os.FileInfo, err error) error {
+	// fmt.Println(f.Path().Name)
+
+	// err = fs.Copy(templatePath, outputPath)
+	// if err != nil {
+	// 	return fmt.Errorf("failed to copy template to the output path: %q", err)
+	// }
+
+	err := pkger.Walk("/template-cnb", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -47,6 +54,14 @@ func Bootstrap(templateWriter TemplateWriter, buildpack, templatePath, outputPat
 		if info.IsDir() {
 			return nil
 		}
+
+		fmt.Println("PATH is: ", path)
+		f, err := pkger.Open(path)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(f)
 
 		if strings.HasPrefix(path, filepath.Join(outputPath, "bin")) ||
 			strings.HasPrefix(path, filepath.Join(outputPath, ".github")) ||

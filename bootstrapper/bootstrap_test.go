@@ -58,8 +58,8 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 		Expect(os.RemoveAll(templatePath)).To(Succeed())
 	})
 
-	it("fills out every template in the correct path", func() {
-		err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
+	it.Focus("fills out every template in the correct path", func() {
+		err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", outputPath)
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(templatizer.FillOutTemplateCall.CallCount).To(Equal(2))
@@ -79,7 +79,7 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 	context("error cases", func() {
 		context("when the buildpack name is malformed", func() {
 			it("errors with a helpful message", func() {
-				err := bootstrapper.Bootstrap(templatizer, "some-malformed-name", templatePath, outputPath)
+				err := bootstrapper.Bootstrap(templatizer, "some-malformed-name", outputPath)
 				Expect(err).To(HaveOccurred())
 
 				Expect(err).To(MatchError(ContainSubstring("buildpack name must be in format <organization>/<buildpack-name>")))
@@ -91,7 +91,7 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 			})
 
 			it("errors", func() {
-				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
+				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", outputPath)
 				Expect(err).To(HaveOccurred())
 
 				Expect(err).To(MatchError(ContainSubstring("failed to copy template to the output path:")))
@@ -105,7 +105,7 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 			})
 
 			it("errors", func() {
-				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
+				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", outputPath)
 				Expect(err).To(HaveOccurred())
 
 				Expect(err).To(MatchError(`failed to fill out template: "some-error"`))
