@@ -8,4 +8,3 @@ import (
 func main() {
 	packit.Run({{ .Buildpack | RemoveHyphens }}.Detect(), {{ .Buildpack | RemoveHyphens }}.Build())
 }
-
