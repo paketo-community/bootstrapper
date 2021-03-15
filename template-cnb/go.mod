@@ -1,4 +1,4 @@
-module github.com/{{ .Organization }}/{{ .Buildpack }}
+module github.com/test/test
 
 go 1.14
 
