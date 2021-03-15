@@ -50,6 +50,7 @@ func Bootstrap(templateWriter TemplateWriter, buildpack, templatePath, outputPat
 
 		if strings.HasPrefix(path, filepath.Join(outputPath, "bin")) ||
 			strings.HasPrefix(path, filepath.Join(outputPath, ".github")) ||
+			strings.HasPrefix(path, filepath.Join(outputPath, "scripts")) ||
 			strings.HasPrefix(path, filepath.Join(outputPath, ".bin")) {
 			return nil
 		}
