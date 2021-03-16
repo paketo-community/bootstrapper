@@ -24,7 +24,7 @@ func TestBootstrapper(t *testing.T) {
 	var err error
 	bootstrapper, err = gexec.Build("github.com/paketo-community/bootstrapper/executer")
 	Expect(err).NotTo(HaveOccurred())
-	SetDefaultEventuallyTimeout(30 * time.Second)
+	SetDefaultEventuallyTimeout(60 * time.Second)
 
 	spec.Run(t, "dispatch", func(t *testing.T, context spec.G, it spec.S) {
 		var (
