@@ -51,6 +51,30 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 			Expect(string(contents)).To(Equal("my-bp-name myorg"))
 		})
 
+		context("when the templated file is a go.mod", func() {
+			it.Before(func() {
+				Expect(os.RemoveAll(templatePath)).To(Succeed())
+
+				template, err := ioutil.TempFile("", "go.mod")
+				Expect(err).NotTo(HaveOccurred())
+
+				_, err = template.WriteString("module github.com/test/test")
+				Expect(err).NotTo(HaveOccurred())
+
+				templatePath = template.Name()
+			})
+
+			it("templates the module", func() {
+				err := templatizer.FillOutTemplate(templatePath, config)
+				Expect(err).NotTo(HaveOccurred())
+
+				contents, err := ioutil.ReadFile(templatePath)
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(string(contents)).To(Equal("module github.com/myorg/my-bp-name"))
+			})
+		})
+
 		context("when the template file uses the RemoveHyphens function", func() {
 			it.Before(func() {
 				Expect(os.RemoveAll(templatePath)).To(Succeed())

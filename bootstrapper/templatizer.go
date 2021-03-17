@@ -24,6 +24,12 @@ func (tz Templatizer) FillOutTemplate(path string, config Config) error {
 		return fmt.Errorf("failed to read template file: %w", err)
 	}
 
+	// go.mod file: update the module to use templating so the go.mod will be functional
+	if strings.Contains(path, "go.mod") {
+		newContents := strings.Replace(string(templ), "github.com/test/test", "github.com/{{ .Organization }}/{{ .Buildpack }}", -1)
+		templ = []byte(newContents)
+	}
+
 	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return fmt.Errorf("failed to open template file: %w", err)
