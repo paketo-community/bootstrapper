@@ -2,9 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 
-	"github.com/paketo-community/bootstrapper/bootstrapper"
+	"github.com/paketo-buildpacks/packit/pexec"
+	"github.com/paketo-community/bootstrapper"
 )
 
 func main() {
@@ -20,9 +21,10 @@ func main() {
 	flag.Parse()
 
 	templatizer := bootstrapper.NewTemplatizer()
-	err := bootstrapper.Bootstrap(templatizer, buildpack, templatePath, outputPath)
+	golang := pexec.NewExecutable("go")
 
+	err := bootstrapper.Bootstrap(templatizer, buildpack, templatePath, outputPath, golang)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 	}
 }
