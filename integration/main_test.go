@@ -2,10 +2,8 @@ package main_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -22,7 +20,7 @@ var bootstrapper string
 func TestBootstrapper(t *testing.T) {
 	var Expect = NewWithT(t).Expect
 	var err error
-	bootstrapper, err = gexec.Build("github.com/paketo-community/bootstrapper/executer")
+	bootstrapper, err = gexec.Build("github.com/paketo-community/bootstrapper/cmd/bootstrapper")
 	Expect(err).NotTo(HaveOccurred())
 	SetDefaultEventuallyTimeout(60 * time.Second)
 
@@ -36,7 +34,7 @@ func TestBootstrapper(t *testing.T) {
 			var outputPath string
 
 			it.Before(func() {
-				outputPath, err = ioutil.TempDir("", "")
+				outputPath, err = os.MkdirTemp("", "")
 				Expect(err).NotTo(HaveOccurred())
 			})
 
@@ -58,7 +56,7 @@ func TestBootstrapper(t *testing.T) {
 
 				Eventually(session).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", buffer.Contents()) })
 
-				unitCmd := exec.Command(filepath.Join("scripts", "unit.sh"))
+				unitCmd := exec.Command("./scripts/unit.sh")
 				unitCmd.Dir = outputPath
 				unitBuffer := gbytes.NewBuffer()
 
@@ -67,7 +65,7 @@ func TestBootstrapper(t *testing.T) {
 
 				Eventually(unitSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", unitBuffer.Contents()) })
 
-				integrationCmd := exec.Command(filepath.Join("scripts", "integration.sh"))
+				integrationCmd := exec.Command("./scripts/integration.sh")
 				integrationCmd.Dir = outputPath
 				integrationBuffer := gbytes.NewBuffer()
 
@@ -83,7 +81,7 @@ func TestBootstrapper(t *testing.T) {
 			var outputPath string
 
 			it.Before(func() {
-				outputPath, err = ioutil.TempDir("", "")
+				outputPath, err = os.MkdirTemp("", "")
 				Expect(err).NotTo(HaveOccurred())
 			})
 
@@ -105,7 +103,7 @@ func TestBootstrapper(t *testing.T) {
 
 				Eventually(session).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", buffer.Contents()) })
 
-				unitCmd := exec.Command(filepath.Join("scripts", "unit.sh"))
+				unitCmd := exec.Command("./scripts/unit.sh")
 				unitCmd.Dir = outputPath
 				unitBuffer := gbytes.NewBuffer()
 
@@ -114,7 +112,7 @@ func TestBootstrapper(t *testing.T) {
 
 				Eventually(unitSession).Should(gexec.Exit(0), func() string { return fmt.Sprintf("output:\n%s\n", unitBuffer.Contents()) })
 
-				integrationCmd := exec.Command(filepath.Join("scripts", "integration.sh"))
+				integrationCmd := exec.Command("./scripts/integration.sh")
 				integrationCmd.Dir = outputPath
 				integrationBuffer := gbytes.NewBuffer()
 

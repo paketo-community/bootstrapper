@@ -7,7 +7,7 @@ A tool to bootstrap [packit](https://github.com/paketo-buildpacks/packit) compli
 - Run the following command:
 
 ```bash
-$ go run executer/main.go --buildpack <organization>/<buildpack>
+$ go run cmd/bootstrapper/main.go --buildpack <organization>/<buildpack>
 ```
 
 Your github repo will be: `github.com/<organization>/<buildpack>`
