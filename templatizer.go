@@ -3,7 +3,6 @@ package bootstrapper
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -19,7 +18,7 @@ func RemoveHyphens(s string) string {
 }
 
 func (tz Templatizer) FillOutTemplate(path string, config Config) error {
-	templ, err := ioutil.ReadFile(path)
+	templ, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("failed to read template file: %w", err)
 	}

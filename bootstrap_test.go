@@ -2,13 +2,13 @@ package bootstrapper_test
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/paketo-community/bootstrapper/bootstrapper"
-	"github.com/paketo-community/bootstrapper/bootstrapper/fakes"
+	"github.com/paketo-buildpacks/packit/pexec"
+	"github.com/paketo-community/bootstrapper"
+	"github.com/paketo-community/bootstrapper/fakes"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"
@@ -19,6 +19,7 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 		Expect = NewWithT(t).Expect
 
 		templatizer *fakes.TemplateWriter
+		executable  *fakes.Executable
 
 		outputPath   string
 		templatePath string
@@ -31,16 +32,16 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 	)
 
 	it.Before(func() {
-		outputPath, err = ioutil.TempDir("", "")
+		outputPath, err = os.MkdirTemp("", "")
 		Expect(err).NotTo(HaveOccurred())
 
-		templatePath, err = ioutil.TempDir("", "")
+		templatePath, err = os.MkdirTemp("", "")
 		Expect(err).NotTo(HaveOccurred())
 
-		err = ioutil.WriteFile(filepath.Join(templatePath, "templ1"), []byte(""), os.ModePerm)
+		err = os.WriteFile(filepath.Join(templatePath, "templ1"), []byte(""), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
 
-		err = ioutil.WriteFile(filepath.Join(templatePath, "templ2"), []byte(""), os.ModePerm)
+		err = os.WriteFile(filepath.Join(templatePath, "templ2"), []byte(""), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
 
 		templatizer = &fakes.TemplateWriter{}
@@ -51,6 +52,8 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 			}{path: path, config: config})
 			return nil
 		}
+
+		executable = &fakes.Executable{}
 	})
 
 	it.After(func() {
@@ -59,7 +62,7 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 	})
 
 	it("fills out every template in the correct path", func() {
-		err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
+		err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath, executable)
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(templatizer.FillOutTemplateCall.CallCount).To(Equal(2))
@@ -74,14 +77,17 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 			Buildpack:    "someBuildpack",
 			Organization: "some-org",
 		}))
+
+		Expect(executable.ExecuteCall.Receives.Execution).To(Equal(pexec.Execution{
+			Args: []string{"mod", "tidy"},
+			Dir:  outputPath,
+		}))
 	})
 
 	context("error cases", func() {
 		context("when the buildpack name is malformed", func() {
 			it("errors with a helpful message", func() {
-				err := bootstrapper.Bootstrap(templatizer, "some-malformed-name", templatePath, outputPath)
-				Expect(err).To(HaveOccurred())
-
+				err := bootstrapper.Bootstrap(templatizer, "some-malformed-name", templatePath, outputPath, executable)
 				Expect(err).To(MatchError(ContainSubstring("buildpack name must be in format <organization>/<buildpack-name>")))
 			})
 		})
@@ -91,9 +97,7 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 			})
 
 			it("errors", func() {
-				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
-				Expect(err).To(HaveOccurred())
-
+				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath, executable)
 				Expect(err).To(MatchError(ContainSubstring("failed to copy template to the output path:")))
 			})
 		})
@@ -105,10 +109,19 @@ func testBootstrap(t *testing.T, context spec.G, it spec.S) {
 			})
 
 			it("errors", func() {
-				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath)
-				Expect(err).To(HaveOccurred())
-
+				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath, executable)
 				Expect(err).To(MatchError(`failed to fill out template: "some-error"`))
+			})
+		})
+
+		context("when running go mod tidy fails", func() {
+			it.Before(func() {
+				executable.ExecuteCall.Returns.Error = errors.New("ooops, this blew up")
+			})
+
+			it("errors", func() {
+				err := bootstrapper.Bootstrap(templatizer, "some-org/someBuildpack", templatePath, outputPath, executable)
+				Expect(err).To(MatchError("failed to run 'go mod tidy': ooops, this blew up"))
 			})
 		})
 	})

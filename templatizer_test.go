@@ -1,13 +1,13 @@
 package bootstrapper_test
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
-	. "github.com/onsi/gomega"
-	"github.com/paketo-community/bootstrapper/bootstrapper"
+	"github.com/paketo-community/bootstrapper"
 	"github.com/sclevine/spec"
+
+	. "github.com/onsi/gomega"
 )
 
 func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
@@ -26,7 +26,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 				Organization: "myorg",
 			}
 
-			template, err := ioutil.TempFile("", "template")
+			template, err := os.CreateTemp("", "template")
 			Expect(err).NotTo(HaveOccurred())
 
 			_, err = template.WriteString("{{ .Buildpack }} {{ .Organization }}")
@@ -45,7 +45,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 			err := templatizer.FillOutTemplate(templatePath, config)
 			Expect(err).NotTo(HaveOccurred())
 
-			contents, err := ioutil.ReadFile(templatePath)
+			contents, err := os.ReadFile(templatePath)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(string(contents)).To(Equal("my-bp-name myorg"))
@@ -55,7 +55,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 			it.Before(func() {
 				Expect(os.RemoveAll(templatePath)).To(Succeed())
 
-				template, err := ioutil.TempFile("", "go.mod")
+				template, err := os.CreateTemp("", "go.mod")
 				Expect(err).NotTo(HaveOccurred())
 
 				_, err = template.WriteString("module github.com/test/test")
@@ -68,7 +68,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 				err := templatizer.FillOutTemplate(templatePath, config)
 				Expect(err).NotTo(HaveOccurred())
 
-				contents, err := ioutil.ReadFile(templatePath)
+				contents, err := os.ReadFile(templatePath)
 				Expect(err).NotTo(HaveOccurred())
 
 				Expect(string(contents)).To(Equal("module github.com/myorg/my-bp-name"))
@@ -79,7 +79,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 			it.Before(func() {
 				Expect(os.RemoveAll(templatePath)).To(Succeed())
 
-				template, err := ioutil.TempFile("", "template")
+				template, err := os.CreateTemp("", "template")
 				Expect(err).NotTo(HaveOccurred())
 
 				_, err = template.WriteString("{{ .Buildpack | RemoveHyphens }}")
@@ -92,7 +92,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 				err := templatizer.FillOutTemplate(templatePath, config)
 				Expect(err).NotTo(HaveOccurred())
 
-				contents, err := ioutil.ReadFile(templatePath)
+				contents, err := os.ReadFile(templatePath)
 				Expect(err).NotTo(HaveOccurred())
 
 				Expect(string(contents)).To(Equal("mybpname"))
@@ -128,7 +128,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 
 			context("when the template can not be filled out", func() {
 				it.Before(func() {
-					template, err := ioutil.TempFile("", "template")
+					template, err := os.CreateTemp("", "template")
 					Expect(err).NotTo(HaveOccurred())
 
 					_, err = template.WriteString("{{ .buildpack }} ")
