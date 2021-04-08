@@ -1,7 +1,6 @@
 package {{ .Buildpack | RemoveHyphens}}_test
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -22,7 +21,7 @@ func testDetect(t *testing.T, context spec.G, it spec.S) {
 
 	it.Before(func() {
 		var err error
-		workingDir, err = ioutil.TempDir("", "working-dir")
+		workingDir, err = os.MkdirTemp("", "working-dir")
 		Expect(err).NotTo(HaveOccurred())
 
 		detect = {{ .Buildpack | RemoveHyphens}}.Detect()
