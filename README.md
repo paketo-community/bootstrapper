@@ -20,12 +20,31 @@ Your github repo will be: `github.com/<organization>/<buildpack>`
 Bootstrapper generates the following buildpack:
 
 ```
+.
+├── .github
+│   ├── .syncignore
+│   ├── dependabot.yml
+│   ├── labels.yml
+│   └── workflows
+│       ├── auto-merge.yml
+│       ├── codeql-analysis.yml
+│       ├── create-draft-release.yml
+│       ├── lint.yml
+│       ├── push-buildpackage.yml
+│       ├── synchronize-labels.yml
+│       ├── test-pull-request.yml
+│       └── update-github-config.yml
+├── .gitignore
+├── .packit
+├── LICENSE
+├── NOTICE
 ├── build.go
-├── buildpack.toml
 ├── build_test.go
+├── buildpack.toml
 ├── detect.go
 ├── detect_test.go
 ├── go.mod
+├── go.sum
 ├── init_test.go
 ├── integration
 │   ├── default_test.go
@@ -34,12 +53,14 @@ Bootstrapper generates the following buildpack:
 │       └── default_app
 │           └── my-app
 ├── integration.json
-├── LICENSE
-├── NOTICE
-├── package.toml
 ├── run
 │   └── main.go
 └── scripts
+    ├── .util
+    │   ├── git.sh
+    │   ├── print.sh
+    │   ├── tools.json
+    │   └── tools.sh
     ├── build.sh
     ├── integration.sh
     ├── package.sh
