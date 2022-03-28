@@ -3,27 +3,27 @@ package fakes
 import (
 	"sync"
 
-	"github.com/paketo-community/bootstrapper"
+	"github.com/paketo-community/bootstrapper/commands/internal"
 )
 
 type TemplateWriter struct {
 	FillOutTemplateCall struct {
-		sync.Mutex
+		mutex     sync.Mutex
 		CallCount int
 		Receives  struct {
 			Path   string
-			Config bootstrapper.Config
+			Config internal.Config
 		}
 		Returns struct {
 			Error error
 		}
-		Stub func(string, bootstrapper.Config) error
+		Stub func(string, internal.Config) error
 	}
 }
 
-func (f *TemplateWriter) FillOutTemplate(param1 string, param2 bootstrapper.Config) error {
-	f.FillOutTemplateCall.Lock()
-	defer f.FillOutTemplateCall.Unlock()
+func (f *TemplateWriter) FillOutTemplate(param1 string, param2 internal.Config) error {
+	f.FillOutTemplateCall.mutex.Lock()
+	defer f.FillOutTemplateCall.mutex.Unlock()
 	f.FillOutTemplateCall.CallCount++
 	f.FillOutTemplateCall.Receives.Path = param1
 	f.FillOutTemplateCall.Receives.Config = param2

@@ -1,4 +1,4 @@
-package bootstrapper
+package internal
 
 import (
 	"errors"
@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/paketo-buildpacks/packit/fs"
-	"github.com/paketo-buildpacks/packit/pexec"
+	"github.com/paketo-buildpacks/packit/v2/fs"
+	"github.com/paketo-buildpacks/packit/v2/pexec"
 )
 
 //go:generate faux --interface TemplateWriter --output fakes/template_writer.go
@@ -26,8 +26,8 @@ type Config struct {
 	Buildpack    string `yaml:"buildpack"`
 }
 
-func Bootstrap(templateWriter TemplateWriter, buildpack, templatePath, outputPath string, golang Executable) error {
-	parts := strings.Split(buildpack, "/")
+func Bootstrap(templateWriter TemplateWriter, buildpackName, outputDir, templateDir string, golang Executable) error {
+	parts := strings.Split(buildpackName, "/")
 	if len(parts) != 2 {
 		return errors.New("buildpack name must be in format <organization>/<buildpack-name>")
 	}
@@ -37,24 +37,24 @@ func Bootstrap(templateWriter TemplateWriter, buildpack, templatePath, outputPat
 		Buildpack:    parts[1],
 	}
 
-	if outputPath == "" {
-		outputPath = filepath.Join("/tmp", config.Buildpack)
+	if outputDir == "" {
+		outputDir = filepath.Join("/tmp", config.Buildpack)
 	}
 
-	err := fs.Copy(templatePath, outputPath)
+	err := fs.Copy(templateDir, outputDir)
 	if err != nil {
 		return fmt.Errorf("failed to copy template to the output path: %q", err)
 	}
 
-	err = filepath.Walk(outputPath, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(outputDir, func(path string, info os.FileInfo, err error) error {
 		switch {
 		case err != nil:
 			return err
 
 		// NOTE: do nothing in these cases
 		case info.IsDir():
-		case strings.HasPrefix(path, filepath.Join(outputPath, ".github")):
-		case strings.HasPrefix(path, filepath.Join(outputPath, "scripts")):
+		case strings.HasPrefix(path, filepath.Join(outputDir, ".github")):
+		case strings.HasPrefix(path, filepath.Join(outputDir, "scripts")):
 
 		default:
 			err = templateWriter.FillOutTemplate(path, config)
@@ -71,7 +71,7 @@ func Bootstrap(templateWriter TemplateWriter, buildpack, templatePath, outputPat
 
 	err = golang.Execute(pexec.Execution{
 		Args: []string{"mod", "tidy"},
-		Dir:  outputPath,
+		Dir:  outputDir,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to run 'go mod tidy': %s", err)

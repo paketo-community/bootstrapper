@@ -1,10 +1,10 @@
-package bootstrapper_test
+package internal_test
 
 import (
 	"os"
 	"testing"
 
-	"github.com/paketo-community/bootstrapper"
+	"github.com/paketo-community/bootstrapper/commands/internal"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"
@@ -14,14 +14,14 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 	var (
 		Expect = NewWithT(t).Expect
 
-		config       bootstrapper.Config
+		config       internal.Config
 		templatePath string
-		templatizer  bootstrapper.Templatizer
+		templatizer  internal.Templatizer
 	)
 
 	context("FillOutTemplate", func() {
 		it.Before(func() {
-			config = bootstrapper.Config{
+			config = internal.Config{
 				Buildpack:    "my-bp-name",
 				Organization: "myorg",
 			}
@@ -34,7 +34,7 @@ func testTemplatizer(t *testing.T, context spec.G, it spec.S) {
 
 			templatePath = template.Name()
 
-			templatizer = bootstrapper.NewTemplatizer()
+			templatizer = internal.NewTemplatizer()
 		})
 
 		it.After(func() {

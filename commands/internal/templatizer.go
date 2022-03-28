@@ -1,4 +1,4 @@
-package bootstrapper
+package internal
 
 import (
 	"fmt"
@@ -24,6 +24,7 @@ func (tz Templatizer) FillOutTemplate(path string, config Config) error {
 	}
 
 	// go.mod file: update the module to use templating so the go.mod will be functional
+	//TODO: just have the template have templating{{}}
 	if strings.Contains(path, "go.mod") {
 		newContents := strings.Replace(string(templ), "github.com/test/test", "github.com/{{ .Organization }}/{{ .Buildpack }}", -1)
 		templ = []byte(newContents)
