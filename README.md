@@ -1,19 +1,34 @@
 # CNB Bootstrapper
 
-A tool to bootstrap [packit](https://github.com/paketo-buildpacks/packit) compliant CNBs.
+A command-line tool to bootstrap
+[packit](https://github.com/paketo-buildpacks/packit/v2)-compliant CNBs.
+
+`bootstrapper` comes with the following commands:
+* help                    : Help about any command
+* run                     : Bootstrap a packit-compliant buildpack
+* version                 : Get the version of the bootstrapper
 
 ## Usage
 
-- Run the following command:
-
-```bash
-$ go run cmd/bootstrapper/main.go --buildpack <organization>/<buildpack>
+#### As a CLI:
+- Package the tool for use:
+```
+$ ./scripts/package.sh -v <version>
 ```
 
-Your github repo will be: `github.com/<organization>/<buildpack>`
+- Run the CLI:
+```
+$ ./build/bootstrapper-<os> run --buildpack-name <organization/buildpack> --output <output directory>
+```
+This will use the default `template-cnb` template to create a packit-compliant
+buildpack complete with scripts, Github workflows, and runnable integration/unit test suites.
 
+If you'd like to use your own template, you can pass the optional `--template`
+argument to `bootstrapper run` with the path to the template directory. Please
+note that the template directory must contain a `go.mod` file.
 
-- You will find your packit compliant buildpack template in `/tmp/<buildpack>`
+Your output buildpack repo will be: `github.com/<organization>/<buildpack>`,
+discoverable at the given output directory.
 
 ## Generated buildpack
 
@@ -35,7 +50,6 @@ Bootstrapper generates the following buildpack:
 │       ├── test-pull-request.yml
 │       └── update-github-config.yml
 ├── .gitignore
-├── .packit
 ├── LICENSE
 ├── NOTICE
 ├── build.go
@@ -69,4 +83,3 @@ Bootstrapper generates the following buildpack:
 
 A good place to start is making the integration tests fail in a way that demonstrates the correct behavior,
 and then working your way through detect and build.
-

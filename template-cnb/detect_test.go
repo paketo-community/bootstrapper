@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/paketo-buildpacks/packit"
+	"github.com/paketo-buildpacks/packit/v2"
 	{{ .Buildpack | RemoveHyphens}} "github.com/{{ .Organization }}/{{ .Buildpack }}"
 	"github.com/sclevine/spec"
 

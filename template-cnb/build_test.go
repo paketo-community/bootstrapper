@@ -4,7 +4,7 @@ import (
 	"testing"
 	"os"
 
-	"github.com/paketo-buildpacks/packit"
+	"github.com/paketo-buildpacks/packit/v2"
 	{{ .Buildpack | RemoveHyphens }} "github.com/{{ .Organization }}/{{ .Buildpack }}"
 	"github.com/sclevine/spec"
 
@@ -64,6 +64,5 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 			},
 			Layers: nil,
 		}))
-
 	})
 }

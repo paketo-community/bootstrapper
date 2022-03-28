@@ -1,0 +1,73 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.17.x
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Run Unit Tests
+      run: ./scripts/unit.sh
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: unit
+    steps:
+    - name: Setup Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.17.x
+    - name: Checkout
+      uses: actions/checkout@v3
+    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* || true
+    - name: Reset Draft Release
+      id: reset
+      uses: paketo-buildpacks/github-config/actions/release/reset-draft@main
+      with:
+        repo: ${{ github.repository }}
+        token: ${{ github.token }}
+    - name: Tag
+      id: tag
+      uses: paketo-buildpacks/github-config/actions/tag/increment-tag@main
+      with:
+        current_version: ${{ steps.reset.outputs.current_version }}
+    - name: Package Bootstrapper
+      run : ./scripts/package.sh --version ${{ steps.tag.outputs.tag }}
+    - name: Create Draft Release
+      uses: paketo-buildpacks/github-config/actions/release/create@main
+      with:
+        repo: ${{ github.repository }}
+        token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
+        tag_name: v${{ steps.tag.outputs.tag }}
+        target_commitish: ${{ github.sha }}
+        name: v${{ steps.tag.outputs.tag }}
+        draft: true
+        assets: |
+          [
+            {
+              "path": "build/bootstrapper-darwin",
+              "name": "bootstrapper-darwin",
+              "content_type": "application/octet-stream"
+            },
+            {
+              "path": "build/bootstrapper-linux",
+              "name": "bootstrapper-linux",
+              "content_type": "application/octet-stream"
+            },
+            {
+              "path": "build/bootstrapper-windows.exe",
+              "name": "bootstrapper-windows.exe",
+              "content_type": "application/octet-stream"
+            }
+          ]
