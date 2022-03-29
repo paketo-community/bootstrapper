@@ -16,12 +16,12 @@ type flags struct {
 }
 
 func run() *cobra.Command {
-	flags := &flags{}
+	var flags flags
 	cmd := &cobra.Command{
 		Use:   "run",
 		Short: "bootstrap a packit-compliant buildpack",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return bootstrapRun(*flags)
+			return bootstrapRun(flags)
 		},
 	}
 	cmd.Flags().StringVar(&flags.buildpackName, "buildpack-name", "", "name of buildpack in the form of <organization>/<buildpack>")
