@@ -62,13 +62,15 @@ function build::bootstrapper(){
   mkdir -p "${ARTIFACTS_DIR}"
 
   pushd "${ROOT_DIR}" > /dev/null || return
+    local ldflags
+    ldflags="-X github.com/paketo-community/bootstrapper/commands.bootstrapperVersion=${version}"
     for os in darwin linux; do
       util::print::info "Building bootstrapper on ${os}"
-      GOOS="${os}" GOARCH="amd64" go build -ldflags "-X github.com/paketo-community/bootstrapper/commands.bootstrapperVersion=${version}" -o "${ARTIFACTS_DIR}/bootstrapper-${os}"  main.go
+      GOOS="${os}" GOARCH="amd64" go build -ldflags "${ldflags}" -o "${ARTIFACTS_DIR}/bootstrapper-${os}"  main.go
       chmod +x "${ARTIFACTS_DIR}/bootstrapper-${os}"
     done
     util::print::info "Building bootstrapper on windows"
-    GOOS="windows" go build -ldflags "-X github.com/paketo-community/bootstrapper/commands.bootstrapperVersion=${version}" -o "${ARTIFACTS_DIR}/bootstrapper-windows.exe" main.go
+    GOOS="windows" go build -ldflags "${ldflags}" -o "${ARTIFACTS_DIR}/bootstrapper-windows.exe" main.go
   popd > /dev/null || return
 }
 
