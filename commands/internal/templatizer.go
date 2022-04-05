@@ -5,6 +5,9 @@ import (
 	"html/template"
 	"os"
 	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type Templatizer struct{}
@@ -15,6 +18,13 @@ func NewTemplatizer() Templatizer {
 
 func RemoveHyphens(s string) string {
 	return strings.ReplaceAll(s, "-", "")
+}
+
+func Title(s string) string {
+	caser := cases.Title(language.English)
+	dst := make([]byte, len(s))
+	_, _, _ = caser.Transform(dst, []byte(s), true)
+	return string(dst)
 }
 
 func (tz Templatizer) FillOutTemplate(path string, config Config) error {
@@ -36,7 +46,7 @@ func (tz Templatizer) FillOutTemplate(path string, config Config) error {
 	}
 
 	funcMap := template.FuncMap{
-		"Title":         strings.Title,
+		"Title":         Title,
 		"RemoveHyphens": RemoveHyphens,
 	}
 	t := template.Must(template.New("t1").Funcs(funcMap).Parse(string(templ)))
