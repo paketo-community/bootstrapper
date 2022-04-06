@@ -10,7 +10,6 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     steps:
-    steps:
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
