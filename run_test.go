@@ -53,7 +53,7 @@ func testRun(t *testing.T, context spec.G, it spec.S) {
 			)
 			session, err := gexec.Start(command, buffer, buffer)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session, "10s").Should(gexec.Exit(0), func() string { return buffer.String() })
+			Eventually(session).Should(gexec.Exit(0), func() string { return buffer.String() })
 
 			Expect(session.Out).To(gbytes.Say("Bootstrapping some-org/some-buildpack buildpack from template at template-cnb"))
 			Expect(session.Out).To(gbytes.Say(fmt.Sprintf("Success. Buildpack available at %s", outputPath)))
@@ -94,7 +94,7 @@ func testRun(t *testing.T, context spec.G, it spec.S) {
 			)
 			session, err := gexec.Start(command, buffer, buffer)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session, "10s").Should(gexec.Exit(0), func() string { return buffer.String() })
+			Eventually(session).Should(gexec.Exit(0), func() string { return buffer.String() })
 
 			Expect(session.Out).To(gbytes.Say(fmt.Sprintf("Bootstrapping some-org/someBuildpack buildpack from template at %s", templatePath)))
 			Expect(session.Out).To(gbytes.Say(fmt.Sprintf("Success. Buildpack available at %s", outputPath)))
