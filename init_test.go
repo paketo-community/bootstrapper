@@ -14,7 +14,7 @@ var path string
 
 func TestBootstrapperTool(t *testing.T) {
 	// Need the 30 second timeout to run tool, run integration tests and unit tests in created buildpack
-	SetDefaultEventuallyTimeout(30 * time.Second)
+	SetDefaultEventuallyTimeout(60 * time.Second)
 
 	suite := spec.New("Bootstrapper", spec.Report(report.Terminal{}))
 	suite.Before(func(t *testing.T) {
