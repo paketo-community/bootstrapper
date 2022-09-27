@@ -45,8 +45,8 @@ jobs:
             buildpackTomlPath="${{ github.workspace }}/buildpack.toml" \
             output="${OUTPUT}"
 
-          id=`cat "${OUTPUT}" | jq -r .[0].id`
-          content=`cat "${OUTPUT}" | jq -r`
+          id=$(jq -r .[0].id < "${OUTPUT}")
+          content=$(jq -r < "${OUTPUT}")
 
           content="${content//'%'/'%25'}"
           content="${content//$'\n'/'%0A'}"
@@ -180,8 +180,8 @@ jobs:
       - name: Get artifact file name
         id: get-file-names
         run: |
-          echo "::set-output name=artifact-file::$(basename *.tgz)"
-          echo "::set-output name=checksum-file::$(basename *.tgz.checksum)"
+          echo "::set-output name=artifact-file::$(basename ./*.tgz)"
+          echo "::set-output name=checksum-file::$(basename ./*.tgz.checksum)"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
