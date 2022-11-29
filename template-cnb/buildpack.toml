@@ -1,4 +1,4 @@
-api = "0.6"
+api = "0.7"
 
 [buildpack]
   id = "{{ .Organization }}/{{ .Buildpack }}"
@@ -6,7 +6,7 @@ api = "0.6"
   name = "Paketo {{ .Buildpack | Title }} Buildpack"
 
 [[stacks]]
-  id = "io.buildpacks.stacks.bionic"
+  id = "io.buildpacks.stacks.jammy"
 
 [metadata]
   include-files = ["bin/run","bin/build","bin/detect","buildpack.toml"]
