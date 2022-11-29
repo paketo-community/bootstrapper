@@ -1,3 +1,6 @@
 {
+  "builders": [
+    "index.docker.io/paketobuildpacks/builder-jammy-buildpackless-base:latest"
+  ],
   "some-buildpack": "github.com/some-org/some-buildpack"
 }
