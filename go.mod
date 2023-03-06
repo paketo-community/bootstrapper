@@ -9,5 +9,5 @@ require (
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/sclevine/spec v1.4.0
 	github.com/spf13/cobra v1.6.1
-	golang.org/x/text v0.7.0
+	golang.org/x/text v0.8.0
 )
