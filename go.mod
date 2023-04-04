@@ -8,6 +8,6 @@ require (
 	github.com/paketo-buildpacks/packit/v2 v2.9.0
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/sclevine/spec v1.4.0
-	github.com/spf13/cobra v1.6.1
+	github.com/spf13/cobra v1.7.0
 	golang.org/x/text v0.8.0
 )
