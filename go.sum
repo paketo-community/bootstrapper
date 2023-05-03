@@ -1642,8 +1642,8 @@ github.com/opencontainers/selinux v1.10.0/go.mod h1:2i0OySw99QjzBBQByd1Gr9gSjvuh
 github.com/opencontainers/selinux v1.10.1/go.mod h1:2i0OySw99QjzBBQByd1Gr9gSjvuho1lHsJxIJ3gGbJI=
 github.com/opencontainers/selinux v1.11.0/go.mod h1:E5dMC3VPuVvVHDYmi78qvhJp8+M586T4DlDRYpFkyec=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
-github.com/paketo-buildpacks/packit/v2 v2.9.1 h1:34AahZRF3pVDS/sfFqMVMaQg4ESLjf9Yj5k06xNrYnk=
-github.com/paketo-buildpacks/packit/v2 v2.9.1/go.mod h1:B7sFWRjydcT/UaGrt23so7jS+386C615OV3B2FK+DCU=
+github.com/paketo-buildpacks/packit/v2 v2.10.0 h1:WcqCCvil3u7217DPQlAZbOkOqeyyTa9y2spuSIys7O4=
+github.com/paketo-buildpacks/packit/v2 v2.10.0/go.mod h1:B7sFWRjydcT/UaGrt23so7jS+386C615OV3B2FK+DCU=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
