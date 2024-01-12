@@ -56,7 +56,7 @@ jobs:
         if [ -z "${tag}" ]; then
           tag="${{ steps.increment.outputs.tag }}"
         fi
-        echo "::set-output name=tag::${tag}"
+        echo "tag=${tag}" >> $GITHUB_OUTPUT
     - name: Package Bootstrapper
       run : ./scripts/package.sh --version ${{ steps.tag.outputs.tag }}
     - name: Create Draft Release
