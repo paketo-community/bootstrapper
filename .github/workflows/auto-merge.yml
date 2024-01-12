@@ -27,7 +27,7 @@ jobs:
             --header "Authorization: token ${GITHUB_TOKEN}"
         )"
 
-        echo "::set-output name=mergeable_state::$(echo "${payload}" | jq -r -c .mergeable_state)"
+        echo "mergeable_state=$(echo "${payload}" | jq -r -c .mergeable_state)" >> $GITHUB_OUTPUT
 
     - name: Merge
       if: ${{ steps.pull_request.outputs.mergeable_state == 'clean' || steps.pull_request.outputs.mergeable_state == 'unstable' }}
