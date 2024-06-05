@@ -18,11 +18,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      with:
-        detached: true
-
     - name: Run Unit Tests
       run: ./scripts/unit.sh
 
