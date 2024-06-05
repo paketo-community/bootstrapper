@@ -7,5 +7,5 @@ require (
 	github.com/paketo-buildpacks/packit/v2 v2.14.0
 	github.com/sclevine/spec v1.4.0
 	github.com/spf13/cobra v1.8.0
-	golang.org/x/text v0.15.0
+	golang.org/x/text v0.16.0
 )
