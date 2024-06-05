@@ -79,7 +79,7 @@ func testRun(t *testing.T, context spec.G, it spec.S) {
 			integrationSession, err := gexec.Start(integrationCmd, integrationBuffer, integrationBuffer)
 			Expect(err).NotTo(HaveOccurred())
 
-			Eventually(integrationSession).Should(gexec.Exit(1))
+			Eventually(integrationSession).Should(gexec.Exit(1), string(integrationBuffer.Contents()))
 			Expect(string(integrationBuffer.Contents())).To(ContainSubstring("Not Implemented"))
 		})
 	})
