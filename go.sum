@@ -1687,8 +1687,8 @@ github.com/opencontainers/selinux v1.10.1/go.mod h1:2i0OySw99QjzBBQByd1Gr9gSjvuh
 github.com/opencontainers/selinux v1.11.0/go.mod h1:E5dMC3VPuVvVHDYmi78qvhJp8+M586T4DlDRYpFkyec=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/orisano/pixelmatch v0.0.0-20220722002657-fb0b55479cde/go.mod h1:nZgzbfBr3hhjoZnS66nKrHmduYNpc34ny7RK4z5/HM0=
-github.com/paketo-buildpacks/packit/v2 v2.14.1 h1:8oabpOXrNJSiS2PIlBXKIL88gF+mJguEmzZtmh2hJ8A=
-github.com/paketo-buildpacks/packit/v2 v2.14.1/go.mod h1:phcMhuAR4alR4bd3EewJsfBQLhftz8DDn54K1gT/zqk=
+github.com/paketo-buildpacks/packit/v2 v2.14.2 h1:4+c9xERJYvww2PvE5niRFa0aMJv4NfA8D1zdcEPIVwo=
+github.com/paketo-buildpacks/packit/v2 v2.14.2/go.mod h1:phcMhuAR4alR4bd3EewJsfBQLhftz8DDn54K1gT/zqk=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
