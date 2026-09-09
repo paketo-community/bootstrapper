@@ -16,8 +16,18 @@ updates:
       update-types:
       - "minor"
       - "patch"
-      exclude-patterns:
-      - "github.com/anchore/stereoscope"
-      - "github.com/testcontainers/testcontainers-go"
-      - "github.com/docker/docker"
-      - "github.com/containerd/containerd"
+- package-ecosystem: gomod
+  directory: "/dependency/retrieval"
+  schedule:
+    interval: daily
+  allow:
+  # Allow both direct and indirect updates for all packages
+  - dependency-type: "all"
+  # group all minor and patch dependency updates together
+  groups:
+    go-modules:
+      patterns:
+      - "*"
+      update-types:
+      - "minor"
+      - "patch"
